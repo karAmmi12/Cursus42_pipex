@@ -6,65 +6,49 @@
 #    By: kammi <kammi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/28 11:13:20 by kammi             #+#    #+#              #
-#    Updated: 2024/02/29 18:08:08 by kammi            ###   ########.fr        #
+#    Updated: 2024/03/08 18:04:12 by kammi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME			=	pipex
+NAME = pipex
+BONUS_NAME = pipex_bonus
+LIBFT = libft/libft.a
+MANDATORY_SRCS = $(wildcard srcs/mandatory/*.c)
+BONUS_SRCS = $(wildcard srcs/bonus/*.c)
+MANDATORY_OBJS = $(MANDATORY_SRCS:.c=.o)
+BONUS_OBJS = $(BONUS_SRCS:.c=.o)
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
+INCLUDES = -Iincludes
 
-LIBFT			=	libft.a
+all: $(NAME)
 
-DIR_SRCS		=	srcs
+$(NAME): $(LIBFT) $(MANDATORY_OBJS)
+	$(CC) $(CFLAGS) $(INCLUDES) $(MANDATORY_OBJS) -Llibft -lft -o $(NAME)
 
-DIR_OBJS		=	.objs
+##bonus: $(LIBFT) $(BONUS_OBJS)
+##	$(CC) $(CFLAGS) $(INCLUDES) $(BONUS_OBJS) -Llibft -lft -o $(NAME)
 
-SRCS_NAMES		=	main.c utils.c
+bonus: $(BONUS_NAME)
 
-OBJS_NAMES		=	${SRCS_NAMES:.c=.o}
+$(BONUS_NAME): $(LIBFT) $(BONUS_OBJS)
+	$(CC) $(CFLAGS) $(INCLUDES) $(BONUS_OBJS) -Llibft -lft -o $(BONUS_NAME)
 
-DEPS			=	${SRCS_NAMES:.c=.d}
-
-SRCS			=	$(addprefix $(DIR_SRCS)/,$(SRCS_NAMES))
-
-OBJS			=	$(addprefix $(DIR_OBJS)/,$(OBJS_NAMES))
-
-HEAD			=	-Ilibft/includes -Iincludes
-
-CC				=	cc
-
-CFLAGS			=	-g3 -Wall -Werror -Wextra -MMD
-
-MAKEFLAGS		=	--no-print-directory
-
-all				:	${NAME}
-
--include: $(DEPS)
-
-$(NAME): $(OBJS)
+$(LIBFT):
 	make -C libft
-	mv libft/libft.a .
-	$(CC) $(CFLAGS) $(OBJS) ${LIBFT} ${HEAD} -o $(NAME)
-	@echo "\033[34;5mpipex\033[0m"
 
-$(DIR_OBJS)/%.o: $(DIR_SRCS)/%.c | $(DIR_OBJS)
-	$(CC) $(CFLAGS) -c $< -o $@ $(HEAD)
-
-$(DIR_OBJS):
-	mkdir -p $(DIR_OBJS)
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
+	rm -f $(MANDATORY_OBJS) $(BONUS_OBJS)
 	make clean -C libft
-	rm -rf ${DIR_OBJS}
-	rm -rf ${OBJS}
 
-fclean:	clean
+fclean: clean
+	rm -f $(NAME)
+	rm -f $(BONUS_NAME)
 	make fclean -C libft
-	rm -rf ${LIBFT}
-	rm -rf ${NAME}
 
-re:	fclean all
+re: fclean all
 
-stop:
-	rm -f ${NAME}
-
-.PHONY:	all clean fclean re bonus
+.PHONY: all clean fclean re bonus
