@@ -6,7 +6,7 @@
 /*   By: kammi <kammi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 12:28:04 by kammi             #+#    #+#             */
-/*   Updated: 2024/03/08 17:04:59 by kammi            ###   ########.fr       */
+/*   Updated: 2024/03/11 18:11:45 by kammi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	handle_execve_error(void)
 {
 	if (errno == ENOENT)
 	{
-		ft_putstr_fd("Error: No such file or directory\n", 2);
+		ft_putstr_fd("Error: no such file or directory\n", 2);
 		exit(127);
 	}
 	else if (errno == EACCES)

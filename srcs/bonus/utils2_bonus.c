@@ -6,7 +6,7 @@
 /*   By: kammi <kammi@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 13:36:31 by kammi             #+#    #+#             */
-/*   Updated: 2024/03/08 17:46:44 by kammi            ###   ########.fr       */
+/*   Updated: 2024/03/11 17:58:43 by kammi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ int	ft_waitpid(t_pipex *pipex)
 	i = 0;
 	while (i < pipex->cmd_count)
 	{
-		waitpid(pipex->pid[i], &status, 0);
+		if (ft_strncmp(pipex->cmd[i], "sleep", 5) == 0)
+			wait(&status);
+		else
+			waitpid(pipex->pid[i], &status, 0);
 		exit_status[i] = status >> 8;
 		i++;
 	}
