@@ -6,13 +6,24 @@
 #    By: kammi <kammi@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/28 11:13:20 by kammi             #+#    #+#              #
-#    Updated: 2024/03/11 18:24:00 by kammi            ###   ########.fr        #
+#    Updated: 2024/03/12 12:25:26 by kammi            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+################################################################################
+## ARGUMENTS
 
 NAME = pipex
 BONUS_NAME = pipex_bonus
 LIBFT = libft/libft.a
+HEADER = includes/pipex.h
+HEADER_BONUS = includes/pipex_bonus.h
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
+
+################################################################################
+## SOURCES
+
 MANDATORY_SRCS = srcs/mandatory/pipex.c\
 				srcs/mandatory/utils.c\
 				srcs/mandatory/utils2.c\
@@ -23,16 +34,17 @@ BONUS_SRCS = srcs/bonus/pipex_bonus.c\
 				srcs/bonus/here_doc_bonus.c\
 
 MANDATORY_OBJS = $(MANDATORY_SRCS:.c=.o)
-BONUS_OBJS = $(BONUS_SRCS:.c=.o)
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
-INCLUDES = -Iincludes
+BONUS_OBJS = $(BONUS_SRCS:.c=.o_bonus)
+
+INCLUDES = -Iincludes/
+
+################################################################################
+## RULES
 
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(MANDATORY_OBJS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(MANDATORY_OBJS) -Llibft -lft -o $(NAME)
-
 
 bonus: $(BONUS_NAME)
 
@@ -42,7 +54,10 @@ $(BONUS_NAME): $(LIBFT) $(BONUS_OBJS)
 $(LIBFT):
 	make -C libft
 
-%.o: %.c
+%.o: %.c $(HEADER)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+%.o_bonus: %.c $(HEADER_BONUS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
